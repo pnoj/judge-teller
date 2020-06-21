@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pnoj-teller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pnoj-teller
+  template:
+    metadata:
+      labels:
+        app: pnoj-teller
+    spec:
+      containers:
+      - image: pnoj/teller:sha-d549f46
+        name: pnojteller
+        ports:
+        - containerPort: 8000
+        # volumeMounts:
+        # - name: pnoj-teller-config
+          # mountPath: "/app/config.py"
+          # readOnly: true
+      # volumes:
+      # - name: pnoj-teller-config
+        # secret:
+          # secretName: pnoj-teller-secret

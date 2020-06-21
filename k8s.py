@@ -5,7 +5,7 @@ config.load_incluster_config()
 v1core = client.CoreV1Api()
 v1batch = client.BatchV1Api()
 
-def create_job(job_name, image, args=[], env=dict(), ports={}, labels={"app": "teller"}, resources=None, deadline=None):
+def create_job(job_name, image, args=[], env=dict(), ports={}, labels={"app": "teller"}, resources=None, deadline=None, privileged=True):
     env_list = []
     for i in env:
         env_list.append(client.V1EnvVar(name=i, value=env[i]))
@@ -16,13 +16,15 @@ def create_job(job_name, image, args=[], env=dict(), ports={}, labels={"app": "t
         resource_req = client.V1ResourceRequirements(requests=resource_config, limits=resources)
     else:
         resource_req = None
+    securityContext = k8s.client.V1SecurityContext(privileged=privileged)
     container = client.V1Container(
         name=f"{job_name}-container",
         image=image,
         args=args,
         env=env_list,
         ports=port_list,
-        resources=resource_req,)
+        resources=resource_req,
+        security_context=securityContext)
     template = client.V1PodTemplateSpec(
         metadata=client.V1ObjectMeta(labels=labels),
         spec=client.V1PodSpec(restart_policy="Never", containers=[container]))
@@ -39,3 +41,5 @@ def create_job(job_name, image, args=[], env=dict(), ports={}, labels={"app": "t
         body=job,
         namespace="pnoj")
     return api_response
+
+config.load_incluster_config()
