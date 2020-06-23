@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: pnoj-teller
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: pnoj-teller
@@ -17,11 +17,11 @@ spec:
         name: pnojteller
         ports:
         - containerPort: 8000
-        # volumeMounts:
-        # - name: pnoj-teller-config
-          # mountPath: "/app/config.py"
-          # readOnly: true
-      # volumes:
-      # - name: pnoj-teller-config
-        # secret:
-          # secretName: pnoj-teller-secret
+        volumeMounts:
+        - name: pnoj-teller-config
+          mountPath: "/app/config.py"
+          readOnly: true
+      volumes:
+      - name: pnoj-teller-config
+        secret:
+          secretName: pnoj-teller-config

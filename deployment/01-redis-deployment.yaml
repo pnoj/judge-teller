@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pnoj-teller-redis
+  labels:
+    app: pnoj-teller-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pnoj-teller-redis
+  template:
+    metadata:
+      labels:
+        app: pnoj-teller-redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:6
+        resources:
+          requests:
+            memory: "32Mi"
+          limits:
+            memory: "64Mi"
+        ports:
+        - containerPort: 6379
