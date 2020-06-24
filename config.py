@@ -1,3 +1,5 @@
+import os
+
 executors = {
     'python3': {
         'name': 'Python3',
@@ -52,9 +54,15 @@ redis_url = "redis://localhost"
 
 cpu = "700m"
 
+tasker_image = "pnoj/grader"
+
+pod_ip = os.environ['POD_IP']
+
 config = {
     "executors": executors,
     "token": token,
     "cpu": cpu,
     "redis_url": redis_url,
+    "tasker_image": tasker_image,
+    "pod_ip": pod_ip,
 }

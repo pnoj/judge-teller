@@ -19,8 +19,14 @@ spec:
         - containerPort: 8000
         volumeMounts:
         - name: pnoj-teller-config
-          mountPath: "/app/config.py"
+          mountPath: /app/config.py
+          subPath: config.py
           readOnly: true
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
       volumes:
       - name: pnoj-teller-config
         secret:
