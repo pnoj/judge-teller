@@ -123,6 +123,8 @@ def get_task(tasker_id):
         'submission_file_url': submission_file_url,
         'problem_file_url': problem_file_url,
         'language': language,
+        'teller_endpoint': f'http://{state["config"]["pod_ip"]}:8000',
+        'token': state["config"]["token"],
     }
 
     return data

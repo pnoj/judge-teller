@@ -12,4 +12,4 @@ COPY . /app
 
 EXPOSE 8000
 
-ENTRYPOINT ["gunicorn", "-w", "1", "-b", "0.0.0.0:8000", "app:app"]
+ENTRYPOINT ["gunicorn", "-t", "600", "-w", "1", "-b", "0.0.0.0:8000", "app:app"]
