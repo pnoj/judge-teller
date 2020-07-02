@@ -4,6 +4,7 @@ import k8s
 import config
 import uuid
 import redis
+import time
 
 app = flask.Flask(__name__)
 
@@ -11,6 +12,9 @@ def authenticate(request):
     token = request.form.get("token")
     if token != state["config"]["token"]:
         flask.abort(401)
+
+def get_box_id():
+    return int(time.time()*(1/state["config"]["isolate_init_interval"])%1000)
 
 @app.route('/')
 def status():
@@ -28,10 +32,20 @@ def create_executor():
     image = state["config"]["executors"][lang]["image"]
     executor_id = uuid.uuid4().hex
     pod_name = f"executor-{executor_id}"
-    api_response = k8s.create_pod(pod_name, image, ports=[8000], resources={"cpu": state["config"]["cpu"]}, privileged=True)
+    api_response = k8s.create_pod(pod_name, image, env={"ISOLATE_BOX_ID": str(get_box_id())}, ports=[8000], resources={"cpu": state["config"]["cpu"]}, privileged=True)
     pod_ip = api_response.status.pod_ip
     rds = state["redis"]
     rds.set(f'executor-{executor_id}-ip', pod_ip)
+
+    for i in range(0, state["config"]["executor_contact_max_retry"]):
+        try:
+            resp = requests.get(f"http://{pod_ip}:8000")
+            resp_json = resp.json()
+            assert resp_json["status"] == "ready"
+            break
+        except requests.exceptions.ConnectionError:
+            time.sleep(state["config"]["executor_contact_retry_delay"])
+    
     return executor_id
     
 @app.route('/create/task', methods=["POST"])
@@ -56,7 +70,7 @@ def create_task():
     rds.set(f'tasker-{tasker_id}-problem', problem_file_url)
     rds.set(f'tasker-{tasker_id}-lang', language)
 
-    api_response = k8s.create_pod(pod_name, image, args=["--task_fetch_url", task_fetch_url], privileged=True)
+    api_response = k8s.create_pod(pod_name, image, env={"ISOLATE_BOX_ID": str(get_box_id())}, args=["--task_fetch_url", task_fetch_url], privileged=True)
 
     return tasker_id
 
@@ -74,6 +88,7 @@ def send_submission():
     executor_id = flask.request.form.get("executor-id")
     rds = state["redis"]
     pod_ip = rds.get(f'executor-{executor_id}-ip')
+    
     if 'submission' in flask.request.files:
         response = requests.post(f'http://{pod_ip}:8000/compile', files=flask.request.files)
         response.raise_for_status()

@@ -3,47 +3,47 @@ import os
 executors = {
     'python3': {
         'name': 'Python3',
-        'image': 'pnoj/executor-python3:sha-4eb36f3',
+        'image': 'pnoj/executor-python3:sha-3b90c3f',
         'runtime': 'python3 3.8',
     },
     'java8': {
         'name': 'Java 8',
-        'image': 'pnoj/executor-java8:sha-4eb36f3',
+        'image': 'pnoj/executor-java8:sha-3b90c3f',
         'runtime': 'javac 1.8',
     },
     'java11': {
         'name': 'Java 11',
-        'image': 'pnoj/executor-java11:sha-4eb36f3',
+        'image': 'pnoj/executor-java11:sha-3b90c3f',
         'runtime': 'javac 11',
     },
     'cpp17': {
         'name': 'C++17',
-        'image': 'pnoj/executor-cpp17:sha-4eb36f3',
+        'image': 'pnoj/executor-cpp17:sha-3b90c3f',
         'runtime': 'gcc 9.3.0',
     },
     'c18': {
         'name': 'C18',
-        'image': 'pnoj/executor-c18:sha-4eb36f3',
+        'image': 'pnoj/executor-c18:sha-3b90c3f',
         'runtime': 'gcc 9.3.0',
     },
     'brainfuck': {
         'name': 'Brainfuck',
-        'image': 'pnoj/executor-brainfuck:sha-4eb36f3',
+        'image': 'pnoj/executor-brainfuck:sha-3b90c3f',
         'runtime': 'BFCC by TheoP',
     },
     'text': {
         'name': 'Text',
-        'image': 'pnoj/executor-text:sha-4eb36f3',
+        'image': 'pnoj/executor-text:sha-3b90c3f',
         'runtime': 'cat 8.3',
     },
     'haskell': {
         'name': 'Haskell',
-        'image': 'pnoj/executors-haskell:sha-4eb36f3',
+        'image': 'pnoj/executors-haskell:sha-3b90c3f',
         'runtime': 'ghc 8.8.3',
     },
     'scratch': {
         'name': 'Scratch',
-        'image': 'pnoj/executors-scratch:sha-4eb36f3',
+        'image': 'pnoj/executors-scratch:sha-3b90c3f',
         'runtime': 'scrape 20.06.5',
     },
 }
@@ -58,6 +58,12 @@ tasker_image = "pnoj/grader"
 
 pod_ip = os.environ['POD_IP']
 
+isolate_init_interval = 1
+
+executor_contact_max_retry = 1000
+
+executor_contact_retry_delay = 0.25
+
 config = {
     "executors": executors,
     "token": token,
@@ -65,4 +71,7 @@ config = {
     "redis_url": redis_url,
     "tasker_image": tasker_image,
     "pod_ip": pod_ip,
+    "isolate_init_interval": isolate_init_interval,
+    "executor_contact_max_retry": executor_contact_max_retry,
+    "executor_contact_retry_delay": executor_contact_retry_delay,
 }
