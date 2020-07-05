@@ -13,7 +13,7 @@ spec:
         app: pnoj-teller
     spec:
       containers:
-      - image: pnoj/teller:sha-d549f46
+      - image: pnoj/teller:sha-d549f46 # Set this to the latest version
         name: pnojteller
         ports:
         - containerPort: 8000

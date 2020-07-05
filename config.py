@@ -38,12 +38,12 @@ executors = {
     },
     'haskell': {
         'name': 'Haskell',
-        'image': 'pnoj/executors-haskell:sha-3b90c3f',
+        'image': 'pnoj/executor-haskell:sha-3b90c3f',
         'runtime': 'ghc 8.8.3',
     },
     'scratch': {
         'name': 'Scratch',
-        'image': 'pnoj/executors-scratch:sha-3b90c3f',
+        'image': 'pnoj/executor-scratch:sha-3b90c3f',
         'runtime': 'scrape 20.06.5',
     },
 }
@@ -54,7 +54,7 @@ redis_url = "redis://localhost"
 
 cpu = "700m"
 
-tasker_image = "pnoj/grader"
+tasker_image = "pnoj/tasker:sha-cee666e"
 
 pod_ip = os.environ['POD_IP']
 

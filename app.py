@@ -70,7 +70,7 @@ def create_task():
     rds.set(f'tasker-{tasker_id}-problem', problem_file_url)
     rds.set(f'tasker-{tasker_id}-lang', language)
 
-    api_response = k8s.create_pod(pod_name, image, env={"ISOLATE_BOX_ID": str(get_box_id())}, args=["--task_fetch_url", task_fetch_url], privileged=True)
+    api_response = k8s.create_pod(pod_name, image, env={"ISOLATE_BOX_ID": str(get_box_id())}, args=["--task_fetch_url", task_fetch_url], privileged=True, await_creation=False)
 
     return tasker_id
 
